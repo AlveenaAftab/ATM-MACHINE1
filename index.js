@@ -1,30 +1,23 @@
 #! /usr/bin/env node
+//this line is called a shebang.it tells the OS(operating system) to run it with node.js 
+//the user enter a english paragraph and all is needed is to just to implement counting characters and words without
+//whitspaces create a github repository for project abd submit URL in the project submission form.  
+//Import the 'inquirer" module,which is a command line interface for node.js
 import inquirer from "inquirer";
-const answer = await inquirer.prompt([
-    { message: "Enter your first number", type: "number", name: "firstnumber" },
-    { message: "Enter your second number", type: "number", name: "secondnumber" },
+//Declare a const 'answer' and assign it to the result of inquirer.prompt function
+const answers = await inquirer.prompt([
     {
-        message: "select one of the operators to perform action",
-        type: "list",
-        name: "operator",
-        choices: ["Addition", "Subtraction", "Multiplication", "Division"],
-    },
+        name: "Sentences",
+        type: "input",
+        message: "Enter your sentence to count the word:",
+    }
 ]);
-console.log(answer);
-// condiotional statement
-if (answer.operator === "Addition") {
-    console.log(answer.firstnumber + answer.secondnumber);
-}
-else if (answer.operator === "Subtraction") {
-    console.log(answer.firstnumber - answer.secondnumber);
-}
-else if (answer.operator === "Multiplication") {
-    console.log(answer.firstnumber * answer.secondnumber);
-}
-else if (answer.operator === "Division") {
-    console.log(answer.firstnumber / answer.secondnumber);
-}
-else {
-    console.log("please select valid operator");
-}
-console.log("THE END.....");
+const words = answers.Sentences.trim().split(" ");
+//method use for white spaces removal (method) String.trim(): string
+//Removes the leading and trailing white space and line terminator 
+//characters from a string.and split Split a string into substrings
+// using the specified separator and return them as an array.
+//print array of words to console
+console.log(words);
+//print the word count of sentences to the console
+console.log(`your sentence word count is ${words.length}`);
