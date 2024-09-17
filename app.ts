@@ -1,186 +1,61 @@
+#! /usr/bin/env node
 import inquirer from "inquirer"
 
-class Player{
+class Student {
     name:string;
-    fuel:number  = 100;
-    constructor(name:string){
-        this.name = name;
+    constructor(n:string){
+        this.name=n
     }
-    fuelDecrease(){
-        let fuel = this.fuel - 25
-        this.fuel = fuel
-    }
-    fuelIncrease() {
-        this.fuel = 100
+
+}
+class Person{
+    students:Student[]=[]
+    addStudent(obj:Student){
+        this.students.push(obj)
     }
 }
 
-class Opponent{
-    name:string;
-    fuel:number = 100;
-    constructor(name:string){
-        this.name = name;
-    }
-    fuelDecrease(){
-        let fuel = this.fuel -25
-        this.fuel = fuel
-    }
-}
-console.log("*******Welcome to Adventure Game*******");
+const persons = new Person()
 
-let player = await inquirer.prompt([
-    {
-        name: "name",
-        type: "input",
-        message:"Please Enter Your Name "
-    }
-]);
-
-let opponent = await inquirer.prompt([
-    {
-        name:"select",
-        type: "list",
-        message:"Select Your Opponent",
-        choices:["Rio","Goku","zakuta"]
-    }
-]);
-
-let p1 = new Player(player.name)
-let o1 = new Opponent(opponent.select)
-
-
-do{
-    // RIO
-    if (opponent.select == "Rio"){
-        let ask = await inquirer.prompt([
-            {
-                name:"opt",
-                type:"list",
-                message:"What would you like to do?",
-                choices:["Attack","Drink Potion","Run for Yor Life..."]
-            }
-        ]);
-        if(ask.opt == "Attack"){
-            let num = Math.floor(Math.random() * 2)
-            if(num > 0){
-                p1.fuelDecrease()
-                console.log(`${p1.name} fuel is ${p1.fuel}`);
-                console.log(`${o1.name} fuel is ${o1.fuel}`);
-                if(p1.fuel <= 0){
-                    console.log("You Loose, Better Luck Next Time");
-                    process.exit()
-                    
-                }
-            }
-            if(num <= 0){
-                o1.fuelDecrease()
-                console.log(`${p1.name} fuel is ${p1.fuel}`);
-                console.log(`${o1.name} fuel is ${o1.fuel}`);
-            if(o1.fuel <= 0){
-                    console.log("You Win");
-                    process.exit()  
-            }
-        }
-        }
-        else if(ask.opt === "Drink Potion"){
-            p1.fuelIncrease()
-            console.log(`Your Drink Health Potion. Your fuel is ${p1.fuel}`);
+const programStart = async (persons:Person)=>{
+    do{
+    console.log("\n\tWelcome!");
+    
+    const ans = await inquirer.prompt({
+        name: "select",
+        type:"list",
+        message:"Whom would you like to interact with?",
+        choices:["staff","student","exit"]
+    })
+    if(ans.select == "staff"){
+        console.log("You approach the staff room. Please feel free to ask any quistion");
+        
+    }else if(ans.select == "student"){
+        const ans = await inquirer.prompt({
+            name:"student",
+            type: "input",
+            message: "Enter the student's name you wish to engage with:"
+        })
+        const student = persons.students.find(val => val.name == ans.student)
+        if (!student){
+            const name = new Student(ans.student)
+            persons.addStudent(name)
+            console.log(`Hello I am ${name.name}. Nice to meet you!`);
+            console.log("New Student added");
+            console.log("Current Student list:");
+            console.log(persons.students);
             
+        }else{
+            console.log(`Hello I am ${student.name}. Nice to see you again!`);
+            console.log("Exiting student list");
+            console.log(persons.students);
         }
-        else if(ask.opt === "Run for Yor Life..."){
-            console.log("You Loose, Better Luck Next Time");
-            process.exit()
-            
-        }
-    }
+    }else if(ans.select == "exit"){
+        console.log("Exiting the Program..");
+        process.exit()
+    } 
+}while(true)
+ }
 
-    //Goku
-    if (opponent.select == "Goku"){
-        let ask = await inquirer.prompt([
-            {
-                name:"opt",
-                type:"list",
-                message:"What would you like to do?",
-                choices:["Attack","Drink Portion","Run for Yor Life..."]
-            }
-        ]);
-        if(ask.opt == "Attack"){
-            let num = Math.floor(Math.random() * 2)
-            if(num > 0){
-                p1.fuelDecrease()
-                console.log(`${p1.name} fuel is ${p1.fuel}`);
-                console.log(`${o1.name} fuel is ${o1.fuel}`);
-                if(p1.fuel <= 0){
-                    console.log("You Loose, Better Luck Next Time");
-                    process.exit()
-                    
-                }
-            }
-            if(num <= 0){
-                o1.fuelDecrease()
-                console.log(`${p1.name} fuel is ${p1.fuel}`);
-                console.log(`${o1.name} fuel is ${o1.fuel}`);
-             if(o1.fuel <= 0){
-                    console.log("You Win");
-                    process.exit()
-            }
-        }
-        }
-        else if(ask.opt === "Drink Portion"){
-            p1.fuelIncrease()
-            console.log(`Your Drink Health Portion. Your fuel is ${p1.fuel}`);
-            
-        }
-        else if(ask.opt === "Run for Yor Life..."){
-            console.log("You Loose, Better Luck Next Time");
-            process.exit()
-            
-        }
-    }
-
-    //Zakuta
-    if (opponent.select == "Zakuta"){
-        let ask = await inquirer.prompt([
-            {
-                name:"opt",
-                type:"list",
-                message:"What would you like to do?",
-                choices:["Attack","Drink Portion","Run for Yor Life..."]
-            }
-        ]);
-        if(ask.opt == "Attack"){
-            let num = Math.floor(Math.random() * 2)
-            if(num > 0){
-                p1.fuelDecrease()
-                console.log(`${p1.name} fuel is ${p1.fuel}`);
-                console.log(`${o1.name} fuel is ${o1.fuel}`);
-                if(p1.fuel <= 0){
-                    console.log("You Loose, Better Luck Next Time");
-                    process.exit()
-                    
-                }
-            }
-            if(num <= 0){
-                o1.fuelDecrease()
-                console.log(`${p1.name} fuel is ${p1.fuel}`);
-                console.log(`${o1.name} fuel is ${o1.fuel}`);
-            if(o1.fuel <= 0){
-                    console.log("You Win");
-                    process.exit()
-            } 
-            }
-        }
-        else if(ask.opt === "Drink Portion"){
-            p1.fuelIncrease()
-            console.log(`Your Drink Health Portion. Your fuel is ${p1.fuel}`);
-            
-        }
-        else if(ask.opt === "Run for Yor Life..."){
-            console.log("You Loose, Better Luck Next Time");
-            process.exit()
-            
-        }
-    }
-}
-
-while(true);
+ programStart(persons)
+    
