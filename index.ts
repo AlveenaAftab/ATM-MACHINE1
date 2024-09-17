@@ -1,29 +1,31 @@
 #! /usr/bin/env node
 
-import inquirer from "inquirer" //todoapp ---a list for material
-let todos = [];
-let condition = true;
+import inquirer from "inquirer";
 
-while (condition) {
-let todosQuestion= await inquirer.prompt( //await to stop for answer 
-   [
-     {
-        name: 'todo',
-        type: 'input', //default use
-        message: "What you want to add in your todos?"
-     },
-     {
-        name: 'SecondQuestion',
-        type: 'confirm', //yes or no type use object is confirm
-        message: 'Do you want to add more?',
-        default:"true"
-     }
-    ]
-);
-
-todos.push(todosQuestion.todo); //push method use to target object addtask and input stores
-condition = todosQuestion.SecondQuestion ;
-console.log(todos);
+const answer = await inquirer.prompt([
+    { message: "Enter your first number", type: "number", name: "firstnumber" },
+    { message: "Enter your second number", type: "number", name: "secondnumber" },
+    {
+      message: "select one of the operators to perform action",
+      type: "list",
+      name: "operator",
+      choices: ["Addition", "Subtraction", "Multiplication", "Division"],
+    },
+  ]);
+  
+  console.log(answer);
+  // condiotional statement
+if (answer.operator === "Addition") {
+    console.log(answer.firstnumber + answer.secondnumber);
+} else if (answer.operator === "Subtraction") {
+    console.log(answer.firstnumber - answer.secondnumber);
+   } else if (answer.operator === "Multiplication") {
+    console.log(answer.firstnumber * answer.secondnumber);
+} else if (answer.operator === "Division") {
+    console.log(answer.firstnumber / answer.secondnumber);
+} 
+else {
+    console.log("please select valid operator")
 }
-//while loops contain consitions and it execute in that times
-//read,update,delete
+
+console.log("THE END.....");
