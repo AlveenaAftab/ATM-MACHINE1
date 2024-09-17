@@ -1,30 +1,43 @@
-#! /usr/bin/env node
-import inquirer from "inquirer";
+import inquirer from "inquirer"; //calling inquirer an pakage
 
-// 1) Computer will generate a random number -Done
+//store currency data
+const currency :any = {
+    USD: 1,
+    EUR:0.91,
+    GBP:0.76,
+    INR:74.57,
+    PKR: 280
+}; //set base currency
 
-// 2) user input for guessing number -Done
 
-// 3) Compare user input with computer generated number and show result - Done
 
-const randomnumber = Math.floor(Math.random() * 6 + 1);
-
-console.log("Welcome to number Guessing Game")
-
-const answers = await inquirer.prompt([
-    {
-        name: "userGuessedNumber",
-        type: "number",
-        message: "please guess a number between 1-10: ",
-    }
-]);
-
-if(answers.userGuessedNumber === randomnumber ){
-   console.log("Congratulation! you guessed right number.")
-}else{
-   console.log("you guessed wrong number.")
-}
-
+let userAnswer= await inquirer.prompt(
+    [
+        {                                   //to store data we use user answer,we use variable to store inquirer data
+           name: 'from',                           //await error b/c compiler doesnot ts config file so,
+            message: "Enter from Currency",
+            type: 'list',
+            choices: ['USD','EUR','GBP','INR','PKR']
+        },
+        {
+            name: 'to',                           //await error b/c compiler doesnot ts config file so,
+            message: "Enter from Currency",
+            type: 'list',
+            choices: ['USD','EUR','GBP','INR','PKR']
+        },
+        {
+            name:'amount',
+            message:"Enter your number",
+            type:'number'
+        }
+    ]
+);
+let fromAmount = currency[userAnswer.from] //exchange rate
+let toAmount = currency[userAnswer.to]     //exchange rate
+let amount = userAnswer.amount
+let baseAmount = amount / fromAmount  //USD base currency
+let convertedAmount = baseAmount * toAmount
+console.log(convertedAmount);
 
 
 

@@ -1,19 +1,34 @@
-#! /usr/bin/env node
-import inquirer from "inquirer";
-// 1) Computer will generate a random number -Done
-// 2) user input for guessing number -Done
-// 3) Compare user input with computer generated number and show result - Done
-const randomnumber = Math.floor(Math.random() * 6 + 1);
-const answers = await inquirer.prompt([
+import inquirer from "inquirer"; //calling inquirer an pakage
+//store currency data
+const currency = {
+    USD: 1,
+    EUR: 0.91,
+    GBP: 0.76,
+    INR: 74.57,
+    PKR: 280
+}; //set base currency
+let userAnswer = await inquirer.prompt([
     {
-        name: "userGuessedNumber",
-        type: "number",
-        message: "please guess a number between 1-10: ",
+        name: 'from',
+        message: "Enter from Currency",
+        type: 'list',
+        choices: ['USD', 'EUR', 'GBP', 'INR', 'PKR']
+    },
+    {
+        name: 'to',
+        message: "Enter from Currency",
+        type: 'list',
+        choices: ['USD', 'EUR', 'GBP', 'INR', 'PKR']
+    },
+    {
+        name: 'amount',
+        message: "Enter your number",
+        type: 'number'
     }
 ]);
-if (answers.userGuessedNumber === randomnumber) {
-    console.log("Congratulation! you guessed right number.");
-}
-else {
-    console.log("you guessed wrong number.");
-}
+let fromAmount = currency[userAnswer.from]; //exchange rate
+let toAmount = currency[userAnswer.to]; //exchange rate
+let amount = userAnswer.amount;
+let baseAmount = amount / fromAmount; //USD base currency
+let convertedAmount = baseAmount * toAmount;
+console.log(convertedAmount);
