@@ -1,61 +1,149 @@
 #! /usr/bin/env node
 import inquirer from "inquirer"
+console.log("\t*****Welcome to the Bank*****");
+console.log("dear checker there are three following accounts in this bank");
+console.log("\taccounts = balance");
+console.log("\t****1001 = $500****");
+console.log("\t****1002 = $1000****");
+console.log("\t****1003 = $2000****");
+console.log("\tEnter anyone from it");
 
-class Student {
-    name:string;
-    constructor(n:string){
-        this.name=n
+
+//Bank account interface
+interface BankAcount{
+    accountNumber: number;
+    balance: number;
+    withdraw(amount:number):void
+    deposit(amount:number):void
+    checkBalance():void
+}
+
+//Bank Account Class
+class BankAcount implements BankAcount{
+    accountNumber: number;
+    balance: number;
+
+    constructor(accountNumber:number, balance: number){
+        this.accountNumber = accountNumber
+        this.balance = balance
     }
 
-}
-class Person{
-    students:Student[]=[]
-    addStudent(obj:Student){
-        this.students.push(obj)
-    }
-}
-
-const persons = new Person()
-
-const programStart = async (persons:Person)=>{
-    do{
-    console.log("\n\tWelcome!");
-    
-    const ans = await inquirer.prompt({
-        name: "select",
-        type:"list",
-        message:"Whom would you like to interact with?",
-        choices:["staff","student","exit"]
-    })
-    if(ans.select == "staff"){
-        console.log("You approach the staff room. Please feel free to ask any quistion");
-        
-    }else if(ans.select == "student"){
-        const ans = await inquirer.prompt({
-            name:"student",
-            type: "input",
-            message: "Enter the student's name you wish to engage with:"
-        })
-        const student = persons.students.find(val => val.name == ans.student)
-        if (!student){
-            const name = new Student(ans.student)
-            persons.addStudent(name)
-            console.log(`Hello I am ${name.name}. Nice to meet you!`);
-            console.log("New Student added");
-            console.log("Current Student list:");
-            console.log(persons.students);
-            
+    //Debit Money
+    withdraw(amount: number): void {
+        if(this.balance >= amount){
+            this.balance -= amount
+            console.log(`Withdrawal of $${amount} successful. Remaining balance is $${this.balance}`);
         }else{
-            console.log(`Hello I am ${student.name}. Nice to see you again!`);
-            console.log("Exiting student list");
-            console.log(persons.students);
+            console.log("Insufficient Balance.");   
         }
-    }else if(ans.select == "exit"){
-        console.log("Exiting the Program..");
-        process.exit()
-    } 
-}while(true)
- }
+    }
 
- programStart(persons)
-    
+    //Credit Money
+    deposit(amount: number): void {
+        if(amount > 100){
+            amount -=1; // $1 fee charged if more than $100 deposited
+        }this.balance += amount
+        console.log(`Deposit of $${amount} successful. Remaining Balance: $${this.balance}`);
+    }
+
+    //Check Balance 
+    checkBalance(): void {
+        console.log(`Current Balance $${this.balance}`);
+    }
+
+}
+
+    // Creating Customer Class
+    class Customer{
+        firstName: string;
+        lastName: string;
+        gender: string;
+        age: number
+        mobileNumber: number;
+        account: BankAcount;
+
+        constructor(firstName: string, lastName: string, gender: string, age: number, mobileNumber:number, account:BankAcount)
+        {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.gender = gender;
+            this.age = age;
+            this.mobileNumber = mobileNumber;
+            this.account = account
+        }
+    }
+
+//Creating Bank Accounts
+
+const accounts: BankAcount[] = [
+    new BankAcount(1001, 500),
+    new BankAcount(1002, 1000),
+    new BankAcount(1003, 2000)
+];
+
+//Creating Customers
+const customers: Customer[] = [
+    new Customer("Syed", "Jalees", "Male", 23, 3332682636, accounts[0]),
+    new Customer("Rizwan", "Soomro", "Male", 34, 3011223388, accounts[1]),
+    new Customer("Nimrah", "Khan", "Female", 23, 3123456789, accounts[2])
+]
+
+// Fuction to interact with bank account
+
+async function service(){
+    do{
+        const accountNumberInput = await inquirer.prompt(
+            {
+                name: "accountNumber",
+                type: "number",
+                message: "Enter your account number:"
+            }
+        );
+
+        const customer = customers.find(customer => customer.account.accountNumber === accountNumberInput.accountNumber)
+        if(customer){
+            console.log(`Welcome, ${customer.firstName} ${customer.lastName}!\n`);
+            const ans = await inquirer.prompt([
+                {
+                    name: "select",
+                    type: "list",
+                    message: "Select an operation",
+                    choices:["Deposit","Withdraw","Check Balance","Exit"]
+                }
+            ]);
+
+            switch(ans.select){
+                    case"Deposit" :
+                    const depositAmount = await inquirer.prompt({
+                        name: "amount",
+                        type: "number",
+                        message: "Enter the amount to deposit:"
+                    })
+                    customer.account.deposit(depositAmount.amount);
+                    break;
+
+                    case"Withdraw" :
+                    const withdrawAmount = await inquirer.prompt({
+                        name: "amount",
+                        type: "number",
+                        message: "Enter the amount to withdraw:"
+                    })
+                    customer.account.withdraw(withdrawAmount.amount);
+                    break;
+
+                    case "Check Balance":
+                        customer.account.checkBalance();
+                        break;
+
+                    case "Exit":
+                        console.log("Exiting Bank Program...");
+                        console.log("\n Thank you for using our Bank services. Have a great day!");
+                        return             
+            }
+        }else{
+            console.log("Invalid Account number. Please try again.");
+            
+        }
+    }while(true)
+}
+service()
