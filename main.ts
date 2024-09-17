@@ -1,52 +1,41 @@
 #! /usr/bin/env node
 import inquirer from "inquirer";
+import {differenceInSeconds} from "date-fns"
 
-let myBalance = 10000; // Dollar
-let mypin = 4420;
-
-let pinAnswer = await inquirer.prompt(
- [
+const ans = await inquirer.prompt([
     {
-        name: "pin",
-        message:"Enter your pin",
-        type:"number"
+        name: "userInput",
+        type: "number",
+        message: "Please enter the time in seconds",
+        validate:(input)=>{
+            if(isNaN(input)){
+                return "Please enter valid number"
+            }else if(input > 60){
+                return "Seconds must be less than 60"
+            }else{
+                return true;
+            }
+
+        }
     }
- ]
-);
+]);
 
-if (pinAnswer.pin === mypin) 
-    console.log("correct pin code!!!");
+let input = ans.userInput
+function startTime(val:number){
+    const intTime = new Date().setSeconds(new Date().getSeconds()+ val);
+    const intervalTime = new Date(intTime);
+    setInterval((()=>{
+        const currTime = new Date()
+        const timeDiff = differenceInSeconds(intervalTime, currTime);
 
-    let operationAns = await inquirer.prompt(
-        [
-           {
-            name: "operation",
-            message: "please select option",
-            type: "list",
-            choices: ["withdraw", "check balance"]
-           } 
-        ]
-    );
-
-console.log(operationAns); 
-
-if (operationAns.operation === "withdraw") {
-    let amountAns = await inquirer.prompt(
-        [
-            {
-        name: "amount",
-        message: "Enter your amount",
-        type: "number"
-    }
-]
-    );
-
-   myBalance -= amountAns.amount;
-
-   console.log("your reamining balance is :"+ myBalance)
-}else if (operationAns.operation === "check balance"){
-    console.log("your balance is :" + myBalance)
+        if(timeDiff <= 0){
+            console.log("Timer has expired");
+            process.exit()
+        }
+        const min = Math.floor((timeDiff%(3600*24))/3600)
+        const sec = Math.floor(timeDiff%60)
+        console.log(`${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`);
+        
+    }),1000)
 }
-else {
-    console.log("Incorrect pin code!!!");
-}
+startTime(input)
