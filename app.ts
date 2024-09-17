@@ -1,149 +1,192 @@
 #! /usr/bin/env node
-import inquirer from "inquirer"
-console.log("\t*****Welcome to the Bank*****");
-console.log("dear checker there are three following accounts in this bank");
-console.log("\taccounts = balance");
-console.log("\t****1001 = $500****");
-console.log("\t****1002 = $1000****");
-console.log("\t****1003 = $2000****");
-console.log("\tEnter anyone from it");
+
+import inquirer from "inquirer";
+import chalk from "chalk";
 
 
-//Bank account interface
-interface BankAcount{
-    accountNumber: number;
-    balance: number;
-    withdraw(amount:number):void
-    deposit(amount:number):void
-    checkBalance():void
+console.log(chalk.red("\n\t\tTypescript Quiz Test\t\n"));
+
+const quiz :{
+question_1 : string
+question_2: string
+question_3: string
+question_4 : string
+question_5: string
+question_6 : string
+question_7 : string
+question_8 : string
+question_9 : string
+question_10 : string
+} = await inquirer.prompt([
+    {
+        name:"question_1",
+        type : "list",
+        message : chalk.blue("\n\t Q1.What is Typescript primarily used for?? \t\n"),
+        choices :["Memory Management" , "Dynamic Typing" ,"Static Typing", "none of these"]
+        
+},
+
+{
+    name:"question_2",
+    type : "list",
+    message : chalk.blue("\n\t Q2.What are the three main `simple types` in typeScript?? \t\n"),
+    choices :["Boolean,Number,String" , "Array,Object,Boolean" , "String,number,array"]
+},
+{
+    name:"question_3",
+    type : "list",
+    message : chalk.blue("\n\t Q3.Which type of data is written 10 in inverted commas?? \t\n"),
+    choices :["string" , "boolean" , "number"]
+},
+{
+    name:"question_4",
+    type : "list",
+    message : chalk.blue("\n\t Q4.What are arrays in typeScript?? \t\n"),
+    choices :["container to store multiple data" , "container to store a single data" , "none of these"]
+},
+{
+    name:"question_5",
+    type : "list",
+    message : chalk.blue("\n\t Q5.shift method is used for what purpose.....?? \t\n"),
+    choices :["remove last element from array" , "remove element from the start of an array" , "replace element"]
+},
+{
+    name:"question_6",
+    type : "list",
+    message : chalk.blue("\n\t Q6.Which command is valid to make pakage.json file?? \t\n"),
+    choices :["tsc init -y" , "npm --init" , "npm init -y"]
+},
+{
+    name:"question_7",
+    type : "list",
+    message :chalk.blue( "\n\t Q7.inquirers are used for ?? \t\n"),
+    choices :["make array" , "take input from a user" , "make a file"]
+},
+{
+    name:"question_8",
+    type : "list",
+    message : chalk.blue("\n\t Q8.tsc --init is used for make a file of ?? \t\n"),
+    choices :["typescript" , "ts config" , "javascript"]
+},
+{
+    name:"question_9",
+    type : "list",
+    message : chalk.blue("\n\t Q9.In Typescript, which symbol is commonly used to terminate a statement?? \t\n"),
+    choices :[".",":",";",","]
+},
+{
+    name:"question_10",
+    type : "list",
+    message : chalk.blue("\n\t Q10.Which method of Inquirer.js is used to start the prompt interface and receive user input?? \t\n"),
+    choices :["start()","prompt()","init()","run()"]
 }
+])
 
-//Bank Account Class
-class BankAcount implements BankAcount{
-    accountNumber: number;
-    balance: number;
+let score : number = 0;
+const total_score:number = 10;
 
-    constructor(accountNumber:number, balance: number){
-        this.accountNumber = accountNumber
-        this.balance = balance
-    }
-
-    //Debit Money
-    withdraw(amount: number): void {
-        if(this.balance >= amount){
-            this.balance -= amount
-            console.log(`Withdrawal of $${amount} successful. Remaining balance is $${this.balance}`);
-        }else{
-            console.log("Insufficient Balance.");   
-        }
-    }
-
-    //Credit Money
-    deposit(amount: number): void {
-        if(amount > 100){
-            amount -=1; // $1 fee charged if more than $100 deposited
-        }this.balance += amount
-        console.log(`Deposit of $${amount} successful. Remaining Balance: $${this.balance}`);
-    }
-
-    //Check Balance 
-    checkBalance(): void {
-        console.log(`Current Balance $${this.balance}`);
-    }
-
+switch(quiz.question_1){
+    case "Static Typing" :
+    console.log(chalk.green("\n\tQuestion number 1 is correct\t\n"));
+    
+    ++score;
+    break;
+    default:
+    console.log(chalk.red("Question number 1 is incorrect"));
 }
-
-    // Creating Customer Class
-    class Customer{
-        firstName: string;
-        lastName: string;
-        gender: string;
-        age: number
-        mobileNumber: number;
-        account: BankAcount;
-
-        constructor(firstName: string, lastName: string, gender: string, age: number, mobileNumber:number, account:BankAcount)
-        {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.gender = gender;
-            this.age = age;
-            this.mobileNumber = mobileNumber;
-            this.account = account
-        }
-    }
-
-//Creating Bank Accounts
-
-const accounts: BankAcount[] = [
-    new BankAcount(1001, 500),
-    new BankAcount(1002, 1000),
-    new BankAcount(1003, 2000)
-];
-
-//Creating Customers
-const customers: Customer[] = [
-    new Customer("Syed", "Jalees", "Male", 23, 3332682636, accounts[0]),
-    new Customer("Rizwan", "Soomro", "Male", 34, 3011223388, accounts[1]),
-    new Customer("Nimrah", "Khan", "Female", 23, 3123456789, accounts[2])
-]
-
-// Fuction to interact with bank account
-
-async function service(){
-    do{
-        const accountNumberInput = await inquirer.prompt(
-            {
-                name: "accountNumber",
-                type: "number",
-                message: "Enter your account number:"
-            }
-        );
-
-        const customer = customers.find(customer => customer.account.accountNumber === accountNumberInput.accountNumber)
-        if(customer){
-            console.log(`Welcome, ${customer.firstName} ${customer.lastName}!\n`);
-            const ans = await inquirer.prompt([
-                {
-                    name: "select",
-                    type: "list",
-                    message: "Select an operation",
-                    choices:["Deposit","Withdraw","Check Balance","Exit"]
-                }
-            ]);
-
-            switch(ans.select){
-                    case"Deposit" :
-                    const depositAmount = await inquirer.prompt({
-                        name: "amount",
-                        type: "number",
-                        message: "Enter the amount to deposit:"
-                    })
-                    customer.account.deposit(depositAmount.amount);
-                    break;
-
-                    case"Withdraw" :
-                    const withdrawAmount = await inquirer.prompt({
-                        name: "amount",
-                        type: "number",
-                        message: "Enter the amount to withdraw:"
-                    })
-                    customer.account.withdraw(withdrawAmount.amount);
-                    break;
-
-                    case "Check Balance":
-                        customer.account.checkBalance();
-                        break;
-
-                    case "Exit":
-                        console.log("Exiting Bank Program...");
-                        console.log("\n Thank you for using our Bank services. Have a great day!");
-                        return             
-            }
-        }else{
-            console.log("Invalid Account number. Please try again.");
-            
-        }
-    }while(true)
+switch(quiz.question_2){
+    case "Boolean,Number,String" :
+    console.log(chalk.green("\n\tQuestion number 2 is correct\t\n"));
+    
+    ++score;
+    break;
+    default:
+    console.log(chalk.red("Question number 2 is incorrect"));
+    
 }
-service()
+switch(quiz.question_3){
+    case "string" :
+    console.log(chalk.green("\n\tQuestion number 3 is correct\t\n"));
+    
+    ++score;
+    break;
+    default:
+    console.log(chalk.red("Question number 3 is incorrect"));
+    
+}
+switch(quiz.question_4){
+    case "container to store multiple data" :
+    console.log(chalk.green("\n\tQuestion number 4 is correct\t\n"));
+    
+    ++score;
+    break;
+    default:
+    console.log(chalk.red("Question number 4 is incorrect"));
+    
+}
+switch(quiz.question_5){
+    case "remove element from the start of an array" :
+    console.log(chalk.green("\n\tQuestion number 5 is correct\t\n"));
+    
+    ++score;
+    break;
+    default:
+    console.log(chalk.red("Question number 5 is incorrect"));
+    
+}
+switch(quiz.question_6){
+    case "npm init -y" :
+    console.log(chalk.green("\n\tQuestion number 6 is correct\t\n"));
+    
+    ++score;
+    break;
+    default:
+    console.log(chalk.red("Question number 6 is incorrect"));
+    
+}
+switch(quiz.question_7){
+    case "take input from a user" :
+    console.log(chalk.green("\n\tQuestion number 7 is correct\t\n"));
+    
+    ++score;
+    break;
+    default:
+    console.log(chalk.red("Question number 7 is incorrect"));
+    
+}
+switch(quiz.question_8){
+    case "ts config" :
+    console.log(chalk.green("\n\tQuestion number 8 is correct\t\n"));
+    
+    ++score;
+    break;
+    default:
+    console.log(chalk.red("Question number 8 is incorrect"));
+    
+}
+switch(quiz.question_9){
+    case ";" :
+    console.log(chalk.green("\n\tQuestion number 9 is correct\t\n"));
+    
+    ++score;
+    break;
+    default:
+    console.log(chalk.red("Question number 9 is incorrect"));
+    
+}
+switch(quiz.question_10){
+    case "prompt()":
+    console.log(chalk.green("\n\tQuestion number 10 is correct\t\n"));
+    
+    ++score;
+    break;
+    default:
+    console.log(chalk.red("Question number 10 is incorrect"));
+    
+}
+if(score == total_score){
+console.log(chalk.yellow(`Congratulations Your Score is : ${score}/${total_score}`));
+}else{
+    console.log(chalk.yellow(`\nYour Score is : ${score}/${total_score}`));
+    
+}
